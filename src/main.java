@@ -9,6 +9,8 @@ public class main {
 
         File file = new File("Datos/wi29.txt");
 
+        GeoRef[] geoRefs =  file.getGeoRef();
+
     }
 
 }
