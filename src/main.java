@@ -7,9 +7,13 @@ public class main {
 
     static public void main (String[]args) throws IOException{
 
-        File file = new File("Datos/wi29.txt");
+        File file = new File("Datos/vm22775.txt");
 
         GeoRef[] geoRefs =  file.getGeoRef();
+
+        Algorithm experiment = new ClosestPoint();
+        experiment.loadData(geoRefs);
+        experiment.run();
 
     }
 
