@@ -4,17 +4,17 @@
 abstract class Algorithm {
 
     protected long time;
-    protected long distance;
+    protected long roadDistance;
     protected GeoRef[] geoRefs;
 
     public Algorithm(){
         this.time       = 0;
-        this.distance   = 0;
+        this.roadDistance = 0;
     }
 
     public void loadData(GeoRef[] data){
         this.time       = 0;
-        this.distance   = 0;
+        this.roadDistance = 0;
         this.geoRefs    = data.clone();
     }
 
@@ -25,8 +25,8 @@ abstract class Algorithm {
         return this.time;
     }
 
-    public long getDistance(){
-        return this.distance;
+    public long getRoadDistance(){
+        return this.roadDistance;
     }
 
 }
