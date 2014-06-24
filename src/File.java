@@ -76,7 +76,7 @@ public class File {
         double x    = Double.parseDouble(data.substring(p1+1, p2).trim());
         double y    = Double.parseDouble(data.substring(p2+1).trim());
 
-        GeoRef geoRef = new GeoRef(id, x, y);
+        GeoRef geoRef = new GeoRef(id-1, x, y);
         return geoRef;
     }
 
