@@ -18,22 +18,23 @@ public class ClosestPoint extends Algorithm{
         roadDistance    = 0;
 
         //dictatorialmente tomamos el primer número del arreglo y desde ahí construimos nuestro camino.
-        geoRefs[0].setMark();
-        road.add(geoRefs[0]);
+
+        geoRefs.get(0).setMark();
+        road.add(geoRefs.get(0));
 
         long timePass = System.nanoTime();
 
-        for (int j = 0; j < geoRefs.length; j++) {
+        for (int j = 0; j < geoRefs.size(); j++) {
 
             double minDistance  = 999999999;
             int id              = 0;
             long distance       = 0;
 
-            for (int i = 0; i < geoRefs.length ; i++) {
+            for (int i = 0; i < geoRefs.size(); i++) {
 
                 // Busco la menor distancia entre los GeoRef que no están marcados.
-                if(!geoRefs[i].isMark()){
-                    distance = (long)distance(road.get(road.size()-1), geoRefs[i]);
+                if(!geoRefs.get(i).isMark()){
+                    distance = (long)distance(road.get(road.size()-1), geoRefs.get(i));
 
                     // si es el minimo, mantengo la información del arreglo.
                     if ( distance < minDistance ) {
@@ -45,12 +46,29 @@ public class ClosestPoint extends Algorithm{
 
 
             /* Almaceno el nodo que tiene la menor distancia entre todos los nodos no marcados */
-            geoRefs[id].setMark();
-            road.add(geoRefs[id]);
+            geoRefs.get(id).setMark();
+            road.add(geoRefs.get(id));
             this.roadDistance = this.roadDistance + distance;
         }
 
+
         this.time = System.nanoTime() - timePass;
+
+        /*
+        System.out.println("Puntos");
+
+        for (GeoRef tmp : geoRefs) {
+            System.out.println("id:"+tmp.getId()+ " x:"+ tmp.getX() + " - y:" + tmp.getY());
+        }
+
+        System.out.println("Camino");
+
+        for (GeoRef tmp : road) {
+            System.out.println("id:"+tmp.getId()+ " x:"+ tmp.getX() + " - y:" + tmp.getY());
+        }
+
+        System.out.println("Size: "+geoRefs.size()+ " - "+road.size());
+        */
 
     }
 
