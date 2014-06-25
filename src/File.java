@@ -1,13 +1,15 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
  */
 public class File {
 
-    private GeoRef[] geoRef;
+    private ArrayList<GeoRef> geoRef;
     private String city = "none";
     private int size    = 0;
+
 
     public File(String archive){
 
@@ -22,24 +24,20 @@ public class File {
             in                  = new DataInputStream(fileInputStream);
             BufferedReader br   = new BufferedReader(new InputStreamReader(in));
 
+            geoRef = new ArrayList<GeoRef>();
 
             for (int i = 0; i < 7; i++) {
                 strLine = br.readLine();
 
                 // City
-                if (i == 1)
+                if (i == 1) {
                     city = parseCity(strLine);
-
-                // Dimension
-                if (i == 4) {
-                    size = parseDimension(strLine);
-                    geoRef = new GeoRef[size];
                 }
             }
 
+            while( !(strLine = br.readLine()).equals("EOF") ){
 
-            for (int i = 0; !(strLine = br.readLine()).equals("EOF") ; i++) {
-                geoRef[i] = parseGeoRef(strLine);
+                geoRef.add(parseGeoRef(strLine));
             }
 
             in.close();
@@ -55,9 +53,6 @@ public class File {
 
     }
 
-    public GeoRef[] getGeoRef(){
-        return this.geoRef;
-    }
 
     private String parseCity(String data){
         return data.substring(data.indexOf("in")+1).trim();
@@ -84,6 +79,9 @@ public class File {
         return city;
     }
 
+    public ArrayList<GeoRef> getGeoRef(){
+        return this.geoRef;
+    }
 
 
 
