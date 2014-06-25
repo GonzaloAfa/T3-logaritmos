@@ -32,4 +32,7 @@ public class GeoRef {
         this.mark = true;
     }
 
+    public int getId() {
+        return id;
+    }
 }
