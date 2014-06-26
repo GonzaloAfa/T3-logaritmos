@@ -16,11 +16,12 @@ public class HeuristicConvexHull extends Algorithm {
 
         ArrayList<MinimalDistance> minimalDistances;
 
+        long timePass = System.nanoTime();
+        this.roadDistance = 0;
+
         // Obtenemos el complemento
         convexHullComplement(convexHull);
-        viewList(convexHull);
 
-        System.out.println("Listado nuevo");
 
         for (int j = geoRefs.size() ; 0 < j   ; j--){
 
@@ -56,7 +57,10 @@ public class HeuristicConvexHull extends Algorithm {
             geoRefs.remove(point);
         }
 
-        viewList(convexHull);
+        this.roadDistance   = countDistance(convexHull);
+        this.time           = System.nanoTime() - timePass;
+
+
 
     }
 
@@ -112,6 +116,14 @@ public class HeuristicConvexHull extends Algorithm {
     }
 
 
+    private long countDistance(ArrayList<GeoRef> c ){
+        long road = 0;
+
+        for (int i = 0; i < c.size() - 1 ; i++)
+            road = road + (long)distance(c.get(i), c.get(i+1));
+
+        return road;
+    }
 
 }
 
