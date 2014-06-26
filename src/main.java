@@ -23,7 +23,7 @@ public class main {
 
 
 
-        FileExperiment file = new FileExperiment("Datos/"+ficheros[0]);
+        FileExperiment file = new FileExperiment("Datos/"+ficheros[7]);
         ArrayList<GeoRef> geoRefs =  file.getGeoRef();
 
 
