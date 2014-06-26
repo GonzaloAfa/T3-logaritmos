@@ -13,62 +13,42 @@ public class ClosestPoint extends Algorithm{
     @Override
     void run() {
 
-        List<GeoRef> road = new ArrayList<GeoRef>();
-
-        roadDistance    = 0;
+        ArrayList<GeoRef> conjunct = new ArrayList<GeoRef>();
+        roadDistance = 0;
 
         //dictatorialmente tomamos el primer número del arreglo y desde ahí construimos nuestro camino.
+        conjunct.add(geoRefs.get(0));
+        geoRefs.remove(0);
 
-        geoRefs.get(0).setMark();
-        road.add(geoRefs.get(0));
+
+
+        long minDistance = 999999999;
+        GeoRef minP = null;
 
         long timePass = System.nanoTime();
 
-        for (int j = 0; j < geoRefs.size(); j++) {
+        while(0 < geoRefs.size()){
 
-            double minDistance  = 999999999;
-            int id              = 0;
-            long distance       = 0;
+            // Buscamos el p \in P que está más cerca de TODOS los puntos del conjunto C
+            for (GeoRef p : geoRefs) {
 
-            for (int i = 0; i < geoRefs.size(); i++) {
+                long d = getDistance(p, conjunct);
 
-                // Busco la menor distancia entre los GeoRef que no están marcados.
-                if(!geoRefs.get(i).isMark()){
-                    distance = (long)distance(road.get(road.size()-1), geoRefs.get(i));
-
-                    // si es el minimo, mantengo la información del arreglo.
-                    if ( distance < minDistance ) {
-                        minDistance = distance;
-                        id = i;
-                    }
-                }
+                if (d < minDistance)
+                    minP = p;
             }
 
+            this.roadDistance = this.roadDistance + (long)distance(conjunct.get(conjunct.size()-1), minP);
 
-            /* Almaceno el nodo que tiene la menor distancia entre todos los nodos no marcados */
-            geoRefs.get(id).setMark();
-            road.add(geoRefs.get(id));
-            this.roadDistance = this.roadDistance + distance;
+            conjunct.add(minP);
+            geoRefs.remove(minP);
+
         }
-
 
         this.time = System.nanoTime() - timePass;
 
-        /*
-        System.out.println("Puntos");
 
-        for (GeoRef tmp : geoRefs) {
-            System.out.println("id:"+tmp.getId()+ " x:"+ tmp.getX() + " - y:" + tmp.getY());
-        }
 
-        System.out.println("Camino");
-
-        for (GeoRef tmp : road) {
-            System.out.println("id:"+tmp.getId()+ " x:"+ tmp.getX() + " - y:" + tmp.getY());
-        }
-
-        System.out.println("Size: "+geoRefs.size()+ " - "+road.size());
-        */
 
     }
 
@@ -80,4 +60,14 @@ public class ClosestPoint extends Algorithm{
         );
     }
 
+
+    private long getDistance(GeoRef p, ArrayList<GeoRef> c){
+        long distance = 0;
+
+        for (GeoRef tmp : c){
+            distance = distance + (long)distance(p, tmp);
+        }
+
+        return distance;
+    }
 }
