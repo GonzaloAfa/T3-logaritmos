@@ -38,16 +38,27 @@ public class ClosestPoint extends Algorithm{
                     minP = p;
             }
 
-            this.roadDistance = this.roadDistance + (long)distance(conjunct.get(conjunct.size()-1), minP);
 
-            conjunct.add(minP);
+            int indice  = 0;
+            long d      = 999999999;
+
+            // buscamos la posición en donde se minimiza la distancia recorrida total :D
+            for (int i = 0; i < conjunct.size(); i++) {
+                long getDistance = (long)distance(minP, conjunct.get(i));
+
+                if (getDistance < d){
+                    d = getDistance;
+                    indice = i;
+                }
+            }
+
+            this.roadDistance = this.roadDistance + d;
+
+            conjunct.add(indice, minP);
             geoRefs.remove(minP);
 
         }
-
         this.time = System.nanoTime() - timePass;
-
-
 
 
     }
