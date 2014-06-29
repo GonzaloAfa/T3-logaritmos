@@ -5,6 +5,10 @@ import java.util.List;
  * Created by Gonzaloafa on 24-06-2014.
  */
 public class ClosestPoint extends Algorithm{
+    @Override
+    String getNameAlgorithm() {
+        return "PuntosCercanos";
+    }
 
     public ClosestPoint(){
         super();

@@ -8,6 +8,7 @@ abstract class Algorithm {
     protected long time;
     protected long roadDistance;
     protected ArrayList<GeoRef> geoRefs;
+    public String nameAlgorithm;
 
     public Algorithm(){
         this.time       = 0;
@@ -20,6 +21,7 @@ abstract class Algorithm {
         this.geoRefs        = (ArrayList<GeoRef>) data.clone();
     }
 
+    abstract String getNameAlgorithm();
     abstract void run();
 
 

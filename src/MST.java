@@ -6,6 +6,11 @@ public class MST extends Algorithm {
     public MST(){}
 
     @Override
+    String getNameAlgorithm() {
+        return "MST";
+    }
+
+    @Override
     void run() {}
 
 
