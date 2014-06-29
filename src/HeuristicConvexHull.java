@@ -9,6 +9,12 @@ public class HeuristicConvexHull extends Algorithm {
         super();
     }
 
+    @Override
+    String getNameAlgorithm() {
+        return "HeuristicaConvexHull";
+    }
+
+
     void run() {
 
         FastConvexHull fastConvexHull   = new FastConvexHull();
@@ -59,8 +65,6 @@ public class HeuristicConvexHull extends Algorithm {
 
         this.roadDistance   = countDistance(convexHull);
         this.time           = System.nanoTime() - timePass;
-
-
 
     }
 
