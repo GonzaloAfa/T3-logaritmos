@@ -1,3 +1,4 @@
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,24 +10,35 @@ public class main {
 
     static public void main (String[]args) throws IOException{
 
-        File dir = new File("Datos");
-        String[] ficheros = dir.list();
 
-        // Listado de archivos
-        if (ficheros == null)
-            System.out.println("No hay ficheros en el directorio especificado");
-        else{
-            System.out.println("Ficheros");
-            for (int x=0;x<ficheros.length;x++)
-                System.out.println(ficheros[x]);
+
+
+        FileExperiment file = new FileExperiment("Datos");
+        ArrayList<GeoRefData> geoRefDatas = file.loadData();
+
+        System.out.println("Ciudades:");
+
+        for (GeoRefData geoRefData : geoRefDatas){
+
+            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
+
+            for (Algorithm alg : algorithms){
+
+                System.out.println(alg.getNameAlgorithm());
+
+                alg.loadData(geoRefData.getGeoRefs());
+                alg.run();
+                System.out.println(alg.getTime()+" - "+alg.getRoadDistance());
+
+                file.saveData(geoRefData.getCity(),alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
+                file.flush();
+            }
+
         }
 
+        file.close();
 
-
-        FileExperiment file = new FileExperiment("Datos/"+ficheros[7]);
-        ArrayList<GeoRef> geoRefs =  file.getGeoRef();
-
-
+/*
         System.out.println("Experimento Puntos Cercanos");
         Algorithm experiment = new ClosestPoint();
         experiment.loadData(geoRefs);
@@ -44,7 +56,7 @@ public class main {
 
         System.out.println("Distancia: "+experiment2.getRoadDistance());
         System.out.println("Tiempo: " + experiment2.getTime());
-
+*/
 
     }
 
