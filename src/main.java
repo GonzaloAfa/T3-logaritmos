@@ -7,7 +7,7 @@ import java.util.ArrayList;
  */
 public class main {
 
-    static public void main (String[]args) throws IOException{
+    static public void main(String[] args) throws IOException {
 
         File dir = new File("Datos");
         String[] ficheros = dir.list();
@@ -15,17 +15,26 @@ public class main {
         // Listado de archivos
         if (ficheros == null)
             System.out.println("No hay ficheros en el directorio especificado");
-        else{
+        else {
             System.out.println("Ficheros");
-            for (int x=0;x<ficheros.length;x++)
+            for (int x = 0; x < ficheros.length; x++)
                 System.out.println(ficheros[x]);
         }
 
+        FileExperiment file = null;
+
+        try {
+            file = new FileExperiment("Datos/" + ficheros[11]);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error de lectura de archivos: " + e);
+            System.exit(-1);
+        }
 
 
-        FileExperiment file = new FileExperiment("Datos/"+ficheros[7]);
-        ArrayList<GeoRef> geoRefs =  file.getGeoRef();
+        System.out.println("City: " + file.getCity());
 
+        ArrayList<GeoRef> geoRefs = file.getGeoRef();
 
         System.out.println("Experimento Puntos Cercanos");
         Algorithm experiment = new ClosestPoint();
@@ -36,13 +45,12 @@ public class main {
         System.out.println("Tiempo: " + experiment.getTime());
 
 
-
         System.out.println("Experimento Heuristica ");
         Algorithm experiment2 = new HeuristicConvexHull();
         experiment2.loadData(geoRefs);
         experiment2.run();
 
-        System.out.println("Distancia: "+experiment2.getRoadDistance());
+        System.out.println("Distancia: " + experiment2.getRoadDistance());
         System.out.println("Tiempo: " + experiment2.getTime());
 
 

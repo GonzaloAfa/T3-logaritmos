@@ -1,8 +1,9 @@
 import java.awt.Point;
 import java.util.ArrayList;
+import java.util.List;
 
 
 public interface ConvexHullAlgorithm
 {
-    ArrayList<GeoRef> execute(ArrayList<GeoRef> points);
+    List<GeoRef> execute(List<GeoRef> points);
 }

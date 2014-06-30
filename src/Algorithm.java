@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
@@ -6,18 +7,19 @@ import java.util.ArrayList;
 abstract class Algorithm {
 
     protected long time;
-    protected long roadDistance;
-    protected ArrayList<GeoRef> geoRefs;
+    protected double roadDistance;
+    protected List<GeoRef> geoRefs, conjunct;
 
     public Algorithm(){
         this.time       = 0;
         this.roadDistance = 0;
     }
 
-    public void loadData(ArrayList<GeoRef> data){
+    public void loadData(List<GeoRef> data){
         this.time           = 0;
         this.roadDistance   = 0;
-        this.geoRefs        = (ArrayList<GeoRef>) data.clone();
+        this.geoRefs        = (List<GeoRef>)((ArrayList<GeoRef>) data).clone();
+        conjunct = new ArrayList<GeoRef>(geoRefs.size());
     }
 
     abstract void run();
@@ -27,7 +29,7 @@ abstract class Algorithm {
         return this.time;
     }
 
-    public long getRoadDistance(){
+    public double getRoadDistance(){
         return this.roadDistance;
     }
 

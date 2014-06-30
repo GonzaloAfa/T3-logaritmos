@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
@@ -12,7 +13,7 @@ public class HeuristicConvexHull extends Algorithm {
     void run() {
 
         FastConvexHull fastConvexHull   = new FastConvexHull();
-        ArrayList<GeoRef> convexHull    = fastConvexHull.execute(this.geoRefs);
+        List<GeoRef> convexHull    = fastConvexHull.execute(this.geoRefs);
 
         ArrayList<MinimalDistance> minimalDistances;
 
@@ -39,7 +40,7 @@ public class HeuristicConvexHull extends Algorithm {
 
             int i = 0;
             GeoRef point = null;
-            double radioDistance = 999999999;
+            double radioDistance = Double.MAX_VALUE;
             double radioDistanceAux;
 
             // Buscamos el punto que tiene menor distancia con el convexHull.
@@ -65,7 +66,7 @@ public class HeuristicConvexHull extends Algorithm {
     }
 
 
-    private void convexHullComplement (ArrayList<GeoRef> convexHull){
+    private void convexHullComplement (List<GeoRef> convexHull){
         for ( GeoRef tmp : convexHull){
             this.geoRefs.remove(tmp);
         }
@@ -80,7 +81,7 @@ public class HeuristicConvexHull extends Algorithm {
 
 
 
-    private int minDistance(ArrayList<GeoRef> convexHull, GeoRef p){
+    private int minDistance(List<GeoRef> convexHull, GeoRef p){
 
         double distance;
         double minDistance = 999999999;
@@ -116,11 +117,12 @@ public class HeuristicConvexHull extends Algorithm {
     }
 
 
-    private long countDistance(ArrayList<GeoRef> c ){
-        long road = 0;
+    private double countDistance(List<GeoRef> c ){
+        double road = 0;
 
-        for (int i = 0; i < c.size() - 1 ; i++)
-            road = road + (long)distance(c.get(i), c.get(i+1));
+        for (int i = 0; i < c.size() - 1 ; i++) {
+            road = road + distance(c.get(i), c.get(i + 1));
+        }
 
         return road;
     }

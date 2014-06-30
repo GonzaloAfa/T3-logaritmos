@@ -8,10 +8,10 @@ public class FileExperiment {
 
     private ArrayList<GeoRef> geoRef;
     private String city = "none";
-    private int size    = 0;
+    private int size = 0;
 
 
-    public FileExperiment(String archive){
+    public FileExperiment(String archive) throws IOException {
 
         DataInputStream in = null;
 
@@ -21,8 +21,8 @@ public class FileExperiment {
 
             FileInputStream fileInputStream = new FileInputStream(archive);
 
-            in                  = new DataInputStream(fileInputStream);
-            BufferedReader br   = new BufferedReader(new InputStreamReader(in));
+            in = new DataInputStream(fileInputStream);
+            BufferedReader br = new BufferedReader(new InputStreamReader(in));
 
             geoRef = new ArrayList<GeoRef>();
 
@@ -35,55 +35,52 @@ public class FileExperiment {
                 }
             }
 
-            while( !(strLine = br.readLine()).equals("EOF") ){
+            while (!(strLine = br.readLine()).equals("EOF")) {
 
                 geoRef.add(parseGeoRef(strLine));
             }
 
-            in.close();
-
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-
+            throw e;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
+            if (in != null) {
+                in.close();
+            }
             // TODO: acá deberia funcionar un in.close(), pero no me resulta xD
         }
 
     }
 
 
-    private String parseCity(String data){
-        return data.substring(data.indexOf("in")+1).trim();
+    private String parseCity(String data) {
+        return data.substring(data.indexOf("in") + 3).trim();
     }
 
-    private int parseDimension(String data){
-        String info = data.substring(data.indexOf(":")+1).trim();
+    private int parseDimension(String data) {
+        String info = data.substring(data.indexOf(":") + 1).trim();
         return Integer.parseInt(info);
     }
 
-    private GeoRef parseGeoRef(String data){
-        int p1 = data.indexOf(" ");
-        int p2 = data.indexOf(" ", p1+1);
+    private GeoRef parseGeoRef(String data) {
+        String[] splitted = data.split(" ");
 
-        int id      = Integer.parseInt(data.substring(0, p1).trim());
-        double x    = Double.parseDouble(data.substring(p1+1, p2).trim());
-        double y    = Double.parseDouble(data.substring(p2+1).trim());
+        int id = new Integer(splitted[0]);
+        double x = new Double(splitted[1]);
+        double y = new Double(splitted[2]);
 
-        GeoRef geoRef = new GeoRef(id-1, x, y);
+        GeoRef geoRef = new GeoRef(id - 1, x, y);
         return geoRef;
     }
 
-    public String getCity(){
+    public String getCity() {
         return city;
     }
 
-    public ArrayList<GeoRef> getGeoRef(){
+    public ArrayList<GeoRef> getGeoRef() {
         return this.geoRef;
     }
-
-
 
 
 }
