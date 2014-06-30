@@ -19,7 +19,7 @@ public class FileExperiment {
 
 
 
-    public FileExperiment(String directory){
+    public FileExperiment(String directory) throws IOException {
 
         File dir = new File(directory);
         archives = dir.list();
@@ -46,7 +46,7 @@ public class FileExperiment {
 
     }
 
-    public ArrayList<GeoRefData> loadData (){
+    public ArrayList<GeoRefData> loadData () throws IOException {
 
         DataInputStream in = null;
 
@@ -56,7 +56,6 @@ public class FileExperiment {
                 String strLine;
 
                 FileInputStream fileInputStream = new FileInputStream(this.directory + "/" + archive);
-
                 in                  = new DataInputStream(fileInputStream);
                 BufferedReader br   = new BufferedReader(new InputStreamReader(in));
 
@@ -73,7 +72,6 @@ public class FileExperiment {
                 while (!(strLine = br.readLine()).equals("EOF"))
                     geoRefData.addGeoRef(parseGeoRef(strLine));
 
-
                 geoRefDatas.add(geoRefData);
 
                 in.close();
@@ -82,8 +80,11 @@ public class FileExperiment {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
-            e.printStackTrace();
+            throw e;
         } finally {
+            if (in != null) {
+                in.close();
+            }
             // TODO: acá deberia funcionar un in.close(), pero no me resulta xD
         }
 
@@ -91,24 +92,23 @@ public class FileExperiment {
     }
 
 
-    private String parseCity(String data){
-        return data.substring(data.indexOf("in")+2).trim();
+    private String parseCity(String data) {
+        return data.substring(data.indexOf("in") + 3).trim();
     }
 
-    private int parseDimension(String data){
-        String info = data.substring(data.indexOf(":")+1).trim();
+    private int parseDimension(String data) {
+        String info = data.substring(data.indexOf(":") + 1).trim();
         return Integer.parseInt(info);
     }
 
-    private GeoRef parseGeoRef(String data){
-        int p1      = data.indexOf(" ");
-        int p2      = data.indexOf(" ", p1+1);
+    private GeoRef parseGeoRef(String data) {
+        String[] splitted = data.split(" ");
 
-        int id      = Integer.parseInt(data.substring(0, p1).trim());
-        double x    = Double.parseDouble(data.substring(p1+1, p2).trim());
-        double y    = Double.parseDouble(data.substring(p2+1).trim());
+        int id = new Integer(splitted[0]);
+        double x = new Double(splitted[1]);
+        double y = new Double(splitted[2]);
 
-        GeoRef geoRef = new GeoRef(id-1, x, y);
+        GeoRef geoRef = new GeoRef(id - 1, x, y);
         return geoRef;
     }
 
@@ -117,7 +117,7 @@ public class FileExperiment {
         writer.print(city + ";");
     }
 
-    public void saveData(String algorithm, long time, long distance){
+    public void saveData(String algorithm, long time, double distance){
         writer.print(algorithm+";"+time+";"+distance+";");
     }
 
@@ -130,7 +130,5 @@ public class FileExperiment {
     public void close() {
         writer.close();
     }
-
-
 
 }

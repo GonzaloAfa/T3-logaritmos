@@ -1,13 +1,14 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 public class FastConvexHull implements ConvexHullAlgorithm{
 
     @Override
-    public ArrayList<GeoRef> execute(ArrayList<GeoRef> points){
+    public List<GeoRef> execute(List<GeoRef> points){
 
-        ArrayList<GeoRef> xSorted = (ArrayList<GeoRef>) points.clone();
+        List<GeoRef> xSorted = (List<GeoRef>)((ArrayList<GeoRef>) points).clone();
         //Sorting
         Collections.sort(xSorted, new Comparator<GeoRef>() {
             @Override
