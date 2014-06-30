@@ -10,10 +10,11 @@ public class HeuristicConvexHull extends Algorithm {
         super();
     }
 
-    void run() {
+    @Override
+    public void run() {
 
         FastConvexHull fastConvexHull   = new FastConvexHull();
-        List<GeoRef> convexHull    = fastConvexHull.execute(this.geoRefs);
+        conjunct    = fastConvexHull.execute(this.geoRefs);
 
         ArrayList<MinimalDistance> minimalDistances;
 
@@ -21,7 +22,7 @@ public class HeuristicConvexHull extends Algorithm {
         this.roadDistance = 0;
 
         // Obtenemos el complemento
-        convexHullComplement(convexHull);
+        convexHullComplement(conjunct);
 
 
         for (int j = geoRefs.size() ; 0 < j   ; j--){
@@ -29,11 +30,11 @@ public class HeuristicConvexHull extends Algorithm {
             // Listado de puntos cercanos.
             minimalDistances = new ArrayList<MinimalDistance>();
 
-            // Listado de todos los puntos del complemento del convexhull con su punto más cercano al convexHull
+            // Listado de todos los puntos del complemento del convexhull con su punto más cercano al conjunct
             for (GeoRef p : geoRefs) {
-                // Minima distancia que tiene el punto comparado con las paredes del convexHull
-                int i = minDistance(convexHull, p);
-                minimalDistances.add(new MinimalDistance(p, convexHull.get(i), convexHull.get(i + 1), i));
+                // Minima distancia que tiene el punto comparado con las paredes del conjunct
+                int i = minDistance(conjunct, p);
+                minimalDistances.add(new MinimalDistance(p, conjunct.get(i), conjunct.get(i + 1), i));
             }
 
 
@@ -43,7 +44,7 @@ public class HeuristicConvexHull extends Algorithm {
             double radioDistance = Double.MAX_VALUE;
             double radioDistanceAux;
 
-            // Buscamos el punto que tiene menor distancia con el convexHull.
+            // Buscamos el punto que tiene menor distancia con el conjunct.
             for (MinimalDistance tmp : minimalDistances) {
                 radioDistanceAux = radioDistance(tmp.getP(), tmp.getP1(), tmp.getP2());
 
@@ -54,11 +55,11 @@ public class HeuristicConvexHull extends Algorithm {
                 }
             }
 
-            convexHull.add(i, point);
+            conjunct.add(i, point);
             geoRefs.remove(point);
         }
 
-        this.roadDistance   = countDistance(convexHull);
+        this.roadDistance   = countDistance(conjunct);
         this.time           = System.nanoTime() - timePass;
 
 
@@ -84,7 +85,7 @@ public class HeuristicConvexHull extends Algorithm {
     private int minDistance(List<GeoRef> convexHull, GeoRef p){
 
         double distance;
-        double minDistance = 999999999;
+        double minDistance = Double.MAX_VALUE;
         int aux = 0;
 
 

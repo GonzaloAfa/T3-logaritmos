@@ -3,6 +3,7 @@
  */
 public class MST extends Algorithm {
 
+
     public MST(){}
 
     @Override

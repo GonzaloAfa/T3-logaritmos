@@ -1,6 +1,7 @@
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
@@ -8,7 +9,18 @@ import java.util.ArrayList;
 public class main {
 
     static public void main(String[] args) throws IOException {
-
+        /*System.out.println("start");
+        int[] a = new int[600000000];
+        for (int i = 0; i < a.length; i++) {
+            a[i] = (int) (Math.random() * 600000000);
+        }
+        System.out.println("Start sorting");
+        double time = System.currentTimeMillis();
+        Arrays.sort(a);
+        System.out.println("Time: " + ((System.currentTimeMillis() - time) / 1000) + "[s]");
+        for (int i = 0; i < 5000; i++) {
+            System.out.print(a[i] + " ");
+        }*/
         File dir = new File("Datos");
         String[] ficheros = dir.list();
 
