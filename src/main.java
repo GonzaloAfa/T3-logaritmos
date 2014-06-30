@@ -10,27 +10,22 @@ public class main {
 
     static public void main (String[]args) throws IOException{
 
-
-
-
         FileExperiment file = new FileExperiment("Datos");
         ArrayList<GeoRefData> geoRefDatas = file.loadData();
 
-        System.out.println("Ciudades:");
-
         for (GeoRefData geoRefData : geoRefDatas){
+
+            // ciudad
+            file.saveData(geoRefData.getCity());
 
             Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
 
             for (Algorithm alg : algorithms){
-
-                System.out.println(alg.getNameAlgorithm());
-
                 alg.loadData(geoRefData.getGeoRefs());
                 alg.run();
-                System.out.println(alg.getTime()+" - "+alg.getRoadDistance());
 
-                file.saveData(geoRefData.getCity(),alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
+                // TipoAlgoritmo + Tiempo + Distancia
+                file.saveData(alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
                 file.flush();
             }
 

@@ -112,9 +112,16 @@ public class FileExperiment {
         return geoRef;
     }
 
-    public void saveData(String city, String algorithm, long time, long distance){
-        writer.println(city + ";"+algorithm+";"+time+";"+distance);
+    public void saveData(String city){
+        writer.println();
+        writer.print(city + ";");
     }
+
+    public void saveData(String algorithm, long time, long distance){
+        writer.print(algorithm+";"+time+";"+distance+";");
+    }
+
+
 
     public void flush() {
         writer.flush();
