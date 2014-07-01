@@ -117,7 +117,7 @@ public class FileExperiment {
         writer.print(city + ";");
     }
 
-    public void saveData(String algorithm, long time, double distance){
+    public void saveData(String algorithm, double time, double distance){
         writer.println(algorithm+";"+time+";"+distance+";");
     }
 

@@ -27,8 +27,8 @@ abstract class Algorithm {
     abstract void run();
 
 
-    public long getTime(){
-        return this.time;
+    public double getTime(){
+        return this.time/1000000000.0;
     }
 
     public double getRoadDistance(){

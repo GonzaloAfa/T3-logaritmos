@@ -1,5 +1,6 @@
 
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
@@ -20,51 +21,37 @@ public class ClosestPoint extends Algorithm {
 
         time = System.nanoTime();
 
-        //dictatorialmente tomamos el primer número del arreglo y desde ahí construimos nuestro camino.
-        conjunct.add(geoRefs.remove(0));
+        //Tomamos un punto al azar del arreglo y desde ahí construimos nuestro camino.
+        GeoRef actual = geoRefs.remove(new Random().nextInt(geoRefs.size()));
+        conjunct.add(actual);
 
-        GeoRef minP;
-        DistanceToSet minimum;
+        double minimum;
+        GeoRef newPoint = null;
 
         while (0 < geoRefs.size()) {
 
-            minP = null;
-            minimum = null;
+            minimum = Double.POSITIVE_INFINITY;
 
-            // Buscamos el p que no está C, que está más cerca del conjunto C
+            // Buscamos el p que no está C, que está más cerca del nodo actual
             for (int i = 0; i < geoRefs.size(); i++) {
                 GeoRef p = geoRefs.get(i);
-                DistanceToSet distance = getDistanceToSet(p, conjunct);
 
-                if (minimum == null || distance.minDistance < minimum.minDistance) {
-                    minimum = distance;
-                    minP = p;
+                double dist = actual.distance(p);
+
+                if (dist < minimum) {
+                    minimum = dist;
+                    newPoint = p;
                 }
             }
 
-            this.roadDistance += minimum.minDistance;
+            roadDistance += minimum;
 
-            conjunct.add(minimum.minIndex + 1, minP);
-            geoRefs.remove(minP);
-
+            conjunct.add(newPoint);
+            geoRefs.remove(newPoint);
+            actual = newPoint;
         }
+
+        roadDistance += conjunct.get(0).distance(conjunct.get(conjunct.size()-1));
         time = System.nanoTime() - time;
-    }
-
-    private DistanceToSet getDistanceToSet(GeoRef outerPoint, List<GeoRef> circuit) {
-        double minimum = Double.MAX_VALUE;
-        int minIndex = -1;
-
-        for (int i = 0; i < circuit.size(); i++) {
-
-            double dist = outerPoint.distance(circuit.get(i));
-
-            if (dist < minimum) {
-                minimum = dist;
-                minIndex = i;
-            }
-        }
-
-        return new DistanceToSet(minimum, minIndex);
     }
 }

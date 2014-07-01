@@ -16,9 +16,9 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
-            /*if(!geoRefData.getCity().equals("Djibouti"))
-                continue;*/
-
+            /*if(!geoRefData.getCity().equals("Djibouti") || geoRefData.getCity().equals("Canada"))
+                continue;
+*/
             System.out.println("Ciudad: "+geoRefData.getCity());
 
             // ciudad
@@ -26,18 +26,18 @@ public class main {
 
 //            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull(), new Prim()};
             //Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
-            Algorithm[] algorithms = {new ClosestPoint()};
+            Algorithm[] algorithms = {new HeuristicConvexHull()};
 //            Algorithm[] algorithms = {new Prim()};
 
             for (Algorithm alg : algorithms){
                 alg.loadData(geoRefData.getGeoRefs());
 
-               System.out.print("Ejecutando " + alg.getNameAlgorithm());
+               System.out.println("Ejecutando " + alg.getNameAlgorithm());
 
                 alg.run();
 
-                System.out.println(": listo!");
-                System.out.println("Tiempo: " + (alg.getTime()/1000)+"\nDistance: "+ alg.getRoadDistance());
+                System.out.println("Listo!");
+                System.out.println("Tiempo: " + alg.getTime()+"\nDistance: "+ alg.getRoadDistance());
                 // TipoAlgoritmo + Tiempo + Distancia
                 file.saveData(alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
                 file.flush();
