@@ -14,7 +14,7 @@ public class MainTestWindow {
     List<GeoRef> points;
     List<GeoRef> path;
     GeoRef selected;
-    Algorithm algorithm = new Prim();
+    Algorithm algorithm = new ClosestPoint();
     JFrame jframe;
 
     public MainTestWindow() {
@@ -87,7 +87,8 @@ public class MainTestWindow {
                     } else {
                         g.drawLine((int) p.getX(), (int) p.getY(), (int) q.getX(), (int) q.getY());
                     }
-                    char[] ar = ("L:"+p.distance(q)).toCharArray();
+                    //char[] ar = ("L:"+p.distance(q)).toCharArray();
+                    char[] ar = ("["+p+"]").toCharArray();
                     g.drawChars(ar,0,ar.length,(int) p.getX(), (int) p.getY());
                 }
             }
@@ -100,7 +101,7 @@ public class MainTestWindow {
         @Override
         public void mousePressed(MouseEvent e) {
             System.out.println("pressed");
-            GeoRef mp = new GeoRef(0, e.getX(), e.getY());
+            GeoRef mp = new GeoRef(points.size(), e.getX(), e.getY());
             double distance = 10;
             for (GeoRef p : points) {
                 if ((p.distance(mp) < distance)) {
@@ -115,7 +116,7 @@ public class MainTestWindow {
             }
             if (selected == null) {
                 System.out.println("new point");
-                selected = new GeoRef(e.getX(), e.getY());
+                selected = new GeoRef(points.size(), e.getX(), e.getY());
                 points.add(selected);
                 jframe.repaint();
             }

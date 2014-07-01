@@ -16,6 +16,11 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
+            if(!geoRefData.getCity().equals("Djibouti"))
+                continue;
+
+            System.out.println("Ciudad: "+geoRefData.getCity());
+
             // ciudad
             file.saveData(geoRefData.getCity());
 
@@ -25,8 +30,13 @@ public class main {
 
             for (Algorithm alg : algorithms){
                 alg.loadData(geoRefData.getGeoRefs());
+
+               System.out.print("Ejecutando " + alg.getNameAlgorithm());
+
                 alg.run();
 
+                System.out.println(": listo!");
+                System.out.println("Tiempo: " + (alg.getTime()/1000)+"\nDistance: "+ alg.getRoadDistance());
                 // TipoAlgoritmo + Tiempo + Distancia
                 file.saveData(alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
                 file.flush();

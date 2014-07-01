@@ -1,11 +1,10 @@
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
  */
-public class ClosestPoint extends Algorithm{
+public class ClosestPoint extends Algorithm {
     @Override
     String getNameAlgorithm() {
         return "PuntosCercanos";
@@ -29,12 +28,12 @@ public class ClosestPoint extends Algorithm{
             GeoRef minP = null;
             DistanceToSet minimum = null;
 
-            // Buscamos el p \in P que está más cerca de TODOS los puntos del conjunto C
-            for (GeoRef p : geoRefs) {
+            // Buscamos el p que no está C, que está más cerca del conjunto C
+            for (int i = 0; i < geoRefs.size(); i++) {
+                GeoRef p = geoRefs.get(i);
+                DistanceToSet distance = getDistanceToSet(p, conjunct);
 
-                DistanceToSet distance= getDistanceToSet(p, conjunct);
-
-                if (minimum == null || distance.totalDistance < minimum.totalDistance) {
+                if (minimum == null || distance.minDistance < minimum.minDistance) {
                     minimum = distance;
                     minP = p;
                 }
@@ -49,15 +48,13 @@ public class ClosestPoint extends Algorithm{
         this.time = System.nanoTime() - timePass;
     }
 
-    private DistanceToSet getDistanceToSet(GeoRef p, List<GeoRef> c) {
-        double totalDistance = 0,
-                minimum = Double.MAX_VALUE;
+    private DistanceToSet getDistanceToSet(GeoRef outerPoint, List<GeoRef> circuit) {
+        double minimum = Double.MAX_VALUE;
         int minIndex = -1;
 
-        for (int i = 0; i < c.size(); i++) {
+        for (int i = 0; i < circuit.size(); i++) {
 
-            double dist = p.distance(c.get(i));
-            totalDistance += dist;
+            double dist = outerPoint.distance(circuit.get(i));
 
             if (dist < minimum) {
                 minimum = dist;
@@ -65,6 +62,6 @@ public class ClosestPoint extends Algorithm{
             }
         }
 
-        return new DistanceToSet(totalDistance, minimum, minIndex);
+        return new DistanceToSet(minimum, minIndex);
     }
 }
