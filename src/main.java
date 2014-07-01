@@ -16,18 +16,22 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
-            // ciudad
+            // Ciudad
             file.saveData(geoRefData.getCity());
+            System.out.println(geoRefData.getCity());
 
             Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
 
             for (Algorithm alg : algorithms){
+                System.out.println(">> "+alg.getNameAlgorithm());
+
                 alg.loadData(geoRefData.getGeoRefs());
                 alg.run();
 
                 // TipoAlgoritmo + Tiempo + Distancia
                 file.saveData(alg.getNameAlgorithm() , alg.getTime(), alg.getRoadDistance());
                 file.flush();
+                System.out.println(">> Time:"+alg.getTime() +" - Distance:"+ alg.getRoadDistance());
             }
 
         }

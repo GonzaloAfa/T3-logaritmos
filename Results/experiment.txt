@@ -1,0 +1,4 @@
+Ciudad;Algoritmo;Tiempo;DistanciaTotal
+
+Canada;PuntosCercanos;4035516902752;1217766.0572652034;HeuristicaConvexHull;12560805620653;9813812.382354148;
+Djibouti;PuntosCercanos;2766460;6008.790082635413;HeuristicaConvexHull;7390655;15014.078116798728;
