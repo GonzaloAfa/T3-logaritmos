@@ -18,15 +18,18 @@ public class ClosestPoint extends Algorithm {
     void run() {
         roadDistance = 0;
 
+        time = System.nanoTime();
+
         //dictatorialmente tomamos el primer número del arreglo y desde ahí construimos nuestro camino.
         conjunct.add(geoRefs.remove(0));
 
-        long timePass = System.nanoTime();
+        GeoRef minP;
+        DistanceToSet minimum;
 
         while (0 < geoRefs.size()) {
 
-            GeoRef minP = null;
-            DistanceToSet minimum = null;
+            minP = null;
+            minimum = null;
 
             // Buscamos el p que no está C, que está más cerca del conjunto C
             for (int i = 0; i < geoRefs.size(); i++) {
@@ -45,7 +48,7 @@ public class ClosestPoint extends Algorithm {
             geoRefs.remove(minP);
 
         }
-        this.time = System.nanoTime() - timePass;
+        time = System.nanoTime() - time;
     }
 
     private DistanceToSet getDistanceToSet(GeoRef outerPoint, List<GeoRef> circuit) {

@@ -23,10 +23,8 @@ public class GeoRef {
     }
 
     public double distance(GeoRef point) {
-        return Math.sqrt(
-                Math.pow((double) (getX() - point.getX()), 2) +
-                        Math.pow((double) (getY() - point.getY()), 2)
-        );
+        return Math.sqrt(Math.pow((getX() - point.getX()), 2) +
+                         Math.pow((getY() - point.getY()), 2));
     }
 
     public double getX() {

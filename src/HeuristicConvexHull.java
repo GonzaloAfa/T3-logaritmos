@@ -6,7 +6,7 @@ import java.util.List;
  */
 public class HeuristicConvexHull extends Algorithm {
 
-    public HeuristicConvexHull(){
+    public HeuristicConvexHull() {
         super();
     }
 
@@ -16,20 +16,18 @@ public class HeuristicConvexHull extends Algorithm {
     }
 
     public void run() {
+        time = System.nanoTime();
+        roadDistance = 0;
 
-        FastConvexHull fastConvexHull   = new FastConvexHull();
-        conjunct    = fastConvexHull.execute(this.geoRefs);
+        FastConvexHull fastConvexHull = new FastConvexHull();
+        conjunct = fastConvexHull.execute(geoRefs);
 
         ArrayList<MinimalDistance> minimalDistances;
 
-        long timePass = System.nanoTime();
-        this.roadDistance = 0;
-
         // Obtenemos el complemento
-        convexHullComplement(conjunct);
+        geoRefs.removeAll(conjunct);
 
-
-        for (int j = geoRefs.size() ; 0 < j   ; j--){
+        for (int j = geoRefs.size(); 0 < j; j--) {
 
             // Listado de puntos cercanos.
             minimalDistances = new ArrayList<MinimalDistance>();
@@ -40,8 +38,6 @@ public class HeuristicConvexHull extends Algorithm {
                 int i = minDistance(conjunct, p);
                 minimalDistances.add(new MinimalDistance(p, conjunct.get(i), conjunct.get(i + 1), i));
             }
-
-
 
             int i = 0;
             GeoRef point = null;
@@ -59,72 +55,55 @@ public class HeuristicConvexHull extends Algorithm {
                 }
             }
 
-            conjunct.add(i, point);
+            conjunct.add(i+1, point);
             geoRefs.remove(point);
         }
 
-        this.roadDistance   = countDistance(conjunct);
-        this.time           = System.nanoTime() - timePass;
+        this.roadDistance = countDistance(conjunct);
+        this.time = System.nanoTime() - time;
 
     }
 
-
-    private void convexHullComplement (List<GeoRef> convexHull){
-        for ( GeoRef tmp : convexHull){
-            this.geoRefs.remove(tmp);
-        }
-    }
-
-    private void viewList(ArrayList<GeoRef> list){
-        for (GeoRef tmp : list){
-            System.out.println("ID: "+tmp.getId()+ " - "+tmp.getX()+ " - "+tmp.getY());
+    private void viewList(ArrayList<GeoRef> list) {
+        for (GeoRef tmp : list) {
+            System.out.println("ID: " + tmp.getId() + " - " + tmp.getX() + " - " + tmp.getY());
         }
 
     }
 
 
-
-    private int minDistance(List<GeoRef> convexHull, GeoRef p){
+    private int minDistance(List<GeoRef> convexHull, GeoRef p) {
 
         double distance;
         double minDistance = Double.MAX_VALUE;
         int aux = 0;
 
+        for (int i = 0; i < convexHull.size() - 1; i++) {
 
-        for (int i = 0; i < convexHull.size()-1 ; i++) {
+            distance = distance(p, convexHull.get(i), convexHull.get(i + 1));
 
-            distance = distance(p,convexHull.get(i), convexHull.get(i+1) );
-
-            if(distance < minDistance){
+            if (distance < minDistance) {
                 minDistance = distance;
-                aux         = i;
+                aux = i;
             }
         }
         return aux;
     }
 
 
-
-
-    private double distance(GeoRef p, GeoRef p1, GeoRef p2){
-        return distance(p, p1) + distance(p, p2) - distance(p1,p2);
+    private double distance(GeoRef p, GeoRef p1, GeoRef p2) {
+        return p.distance(p1) + p.distance(p2) - p1.distance(p2);
     }
 
-    private double radioDistance(GeoRef p, GeoRef p1, GeoRef p2){
-        return (distance(p, p1) + distance(p, p2)) / (distance(p1, p2));
+    private double radioDistance(GeoRef p, GeoRef p1, GeoRef p2) {
+        return (p.distance(p1) + p.distance(p2)) / (p1.distance(p2));
     }
 
-
-    private double distance (GeoRef p1, GeoRef p2){
-        return Math.sqrt( Math.pow(p1.getX() - p2.getX(), 2) + Math.pow(p1.getY() - p2.getY(), 2));
-    }
-
-
-    private double countDistance(List<GeoRef> c ){
+    private double countDistance(List<GeoRef> c) {
         double road = 0;
 
-        for (int i = 0; i < c.size() - 1 ; i++) {
-            road = road + distance(c.get(i), c.get(i + 1));
+        for (int i = 0; i < c.size() - 1; i++) {
+            road = road + c.get(i).distance(c.get(i + 1));
         }
 
         return road;

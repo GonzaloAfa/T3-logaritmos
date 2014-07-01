@@ -16,8 +16,8 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
-            if(!geoRefData.getCity().equals("Djibouti"))
-                continue;
+            /*if(!geoRefData.getCity().equals("Djibouti"))
+                continue;*/
 
             System.out.println("Ciudad: "+geoRefData.getCity());
 
@@ -25,7 +25,8 @@ public class main {
             file.saveData(geoRefData.getCity());
 
 //            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull(), new Prim()};
-            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
+            //Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
+            Algorithm[] algorithms = {new ClosestPoint()};
 //            Algorithm[] algorithms = {new Prim()};
 
             for (Algorithm alg : algorithms){
