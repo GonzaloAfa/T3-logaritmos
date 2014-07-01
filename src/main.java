@@ -19,7 +19,9 @@ public class main {
             // ciudad
             file.saveData(geoRefData.getCity());
 
+//            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull(), new Prim()};
             Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
+//            Algorithm[] algorithms = {new Prim()};
 
             for (Algorithm alg : algorithms){
                 alg.loadData(geoRefData.getGeoRefs());

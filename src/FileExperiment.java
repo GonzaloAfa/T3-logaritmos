@@ -118,7 +118,7 @@ public class FileExperiment {
     }
 
     public void saveData(String algorithm, long time, double distance){
-        writer.print(algorithm+";"+time+";"+distance+";");
+        writer.println(algorithm+";"+time+";"+distance+";");
     }
 
 

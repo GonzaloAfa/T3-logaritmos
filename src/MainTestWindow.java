@@ -14,7 +14,7 @@ public class MainTestWindow {
     List<GeoRef> points;
     List<GeoRef> path;
     GeoRef selected;
-    Algorithm algorithm = new ClosestPoint();
+    Algorithm algorithm = new Prim();
     JFrame jframe;
 
     public MainTestWindow() {
