@@ -67,8 +67,6 @@ public class Prim extends Algorithm {
         }
 
         roadDistance += conjunct.get(conjunct.size()-1).distance(conjunct.get(0));
-
-        int i = 9;
     }
 
     /**
