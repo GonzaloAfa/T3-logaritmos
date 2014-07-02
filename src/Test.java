@@ -1,4 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nolda on 01-07-2014.
@@ -6,7 +9,12 @@ import java.util.ArrayList;
 public class Test {
 
     public static void main(String ...args){
-        Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
+        Map<Map<Double,Double>,Integer> a = new HashMap<Map<Double, Double>, Integer>(5);
+        //a.put(new H2);
+        System.out.print(a.get(3));
+
+
+        /*Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
 //            Algorithm[] algorithms = {new Prim()};
 
         ArrayList<GeoRef> geoRefs = new ArrayList<GeoRef>();
@@ -27,6 +35,6 @@ public class Test {
 
             // TipoAlgoritmo + Tiempo + Distancia
             System.out.println("Tiempo: " + (alg.getTime()/1000)+"\nDistance: "+ alg.getRoadDistance());
-        }
+        }*/
     }
 }

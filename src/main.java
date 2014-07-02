@@ -16,9 +16,9 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
-            /*if(!geoRefData.getCity().equals("Djibouti") || geoRefData.getCity().equals("Canada"))
-                continue;
-*/
+            /*if(!geoRefData.getCity().equals("Western Sahara"))
+                continue;*/
+
             System.out.println("Ciudad: "+geoRefData.getCity());
 
             // ciudad

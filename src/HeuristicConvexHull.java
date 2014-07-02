@@ -1,5 +1,7 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
@@ -22,46 +24,66 @@ public class HeuristicConvexHull extends Algorithm {
         FastConvexHull fastConvexHull = new FastConvexHull();
         conjunct = fastConvexHull.execute(geoRefs);
 
-        ArrayList<MinimalDistance> minimalDistances;
-
         // Obtenemos el complemento
         geoRefs.removeAll(conjunct);
 
+        // Listado de puntos cercanos.
+        Map<GeoRef,MinimalDistance> minimalDistances = new HashMap<GeoRef, MinimalDistance>(geoRefs.size());
+
+        // Listado de todos los puntos del complemento del convexhull con su punto más cercano al conjunct
+        for (GeoRef innerPoint : geoRefs) {
+            // Minima distancia que tiene el punto comparado con las paredes del conjunct
+            MinimalDistance minDist = new MinimalDistance(conjunct, innerPoint);
+            minimalDistances.put(innerPoint, minDist);
+        }
+
+        System.out.println("Calculados minimos iniciales. Quedan:");
+
+        // We add the remaining points to the circuit
         for (int j = geoRefs.size(); 0 < j; j--) {
 
-            // Listado de puntos cercanos.
-            minimalDistances = new ArrayList<MinimalDistance>();
-
-            // Listado de todos los puntos del complemento del convexhull con su punto más cercano al conjunct
-            for (GeoRef p : geoRefs) {
-                // Minima distancia que tiene el punto comparado con las paredes del conjunct
-                int i = minDistance(conjunct, p);
-                minimalDistances.add(new MinimalDistance(p, conjunct.get(i), conjunct.get(i + 1), i));
+            if(j%500==0){
+                System.out.print(" "+j);
             }
 
-            int i = 0;
-            GeoRef point = null;
-            double radioDistance = Double.MAX_VALUE;
-            double radioDistanceAux;
+            MinimalDistance bestToAdd = null;
+            double ratioDistance = Double.POSITIVE_INFINITY;
+            double ratioDistanceAux;
 
             // Buscamos el punto que tiene menor distancia con el conjunct.
-            for (MinimalDistance tmp : minimalDistances) {
-                radioDistanceAux = radioDistance(tmp.getP(), tmp.getP1(), tmp.getP2());
+            for (MinimalDistance actual : minimalDistances.values()) {
+                ratioDistanceAux = actual.getRatio();
 
-                if (radioDistanceAux < radioDistance) {
-                    radioDistance = radioDistanceAux;
-                    point = tmp.getP();
-                    i = tmp.getID();
+                if (ratioDistanceAux < ratioDistance) {
+                    ratioDistance = ratioDistanceAux;
+                    bestToAdd = actual;
                 }
             }
 
-            conjunct.add(i+1, point);
-            geoRefs.remove(point);
+            conjunct.add(bestToAdd.getInsertionIndex() + 1, bestToAdd.getP());
+            geoRefs.remove(bestToAdd.getP());
+
+            // We need to remove it from the list because now is part of the CH
+            minimalDistances.remove(bestToAdd.getP());
+
+            updateCHCosts(minimalDistances, bestToAdd.getmPath());
         }
 
-        this.roadDistance = countDistance(conjunct);
-        this.time = System.nanoTime() - time;
+        roadDistance = countDistance(conjunct);
+        time = System.nanoTime() - time;
+        System.out.println("");
+    }
 
+    private void updateCHCosts(Map<GeoRef, MinimalDistance> minimalDistances, PathProposal path) {
+
+        PathProposal.insertInCHCosts(path);
+
+        // For each remaining inner point
+        for (int i=0;i<geoRefs.size();i++) {
+            MinimalDistance actual = minimalDistances.get(geoRefs.get(i));
+
+            actual.updateCosts(path, conjunct);
+        }
     }
 
     private void viewList(ArrayList<GeoRef> list) {
@@ -71,40 +93,14 @@ public class HeuristicConvexHull extends Algorithm {
 
     }
 
-
-    private int minDistance(List<GeoRef> convexHull, GeoRef p) {
-
-        double distance;
-        double minDistance = Double.MAX_VALUE;
-        int aux = 0;
-
-        for (int i = 0; i < convexHull.size() - 1; i++) {
-
-            distance = distance(p, convexHull.get(i), convexHull.get(i + 1));
-
-            if (distance < minDistance) {
-                minDistance = distance;
-                aux = i;
-            }
-        }
-        return aux;
-    }
-
-
-    private double distance(GeoRef p, GeoRef p1, GeoRef p2) {
-        return p.distance(p1) + p.distance(p2) - p1.distance(p2);
-    }
-
-    private double radioDistance(GeoRef p, GeoRef p1, GeoRef p2) {
-        return (p.distance(p1) + p.distance(p2)) / (p1.distance(p2));
-    }
-
     private double countDistance(List<GeoRef> c) {
         double road = 0;
 
         for (int i = 0; i < c.size() - 1; i++) {
-            road = road + c.get(i).distance(c.get(i + 1));
+            road += c.get(i).distance(c.get(i + 1));
         }
+
+        road += c.get(0).distance(c.get(c.size() - 1));
 
         return road;
     }
