@@ -16,8 +16,8 @@ public class main {
 
         for (GeoRefData geoRefData : geoRefDatas){
 
-            /*if(!geoRefData.getCity().equals("Western Sahara"))
-                continue;*/
+//            if(!geoRefData.getCity().equals("Western Sahara"))
+//                continue;
 
             System.out.println("Ciudad: "+geoRefData.getCity());
 
@@ -26,8 +26,8 @@ public class main {
 
 //            Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull(), new Prim()};
             //Algorithm[] algorithms = {new ClosestPoint(),new HeuristicConvexHull()};
-            Algorithm[] algorithms = {new HeuristicConvexHull()};
-//            Algorithm[] algorithms = {new Prim()};
+//            Algorithm[] algorithms = {new HeuristicConvexHull()};
+            Algorithm[] algorithms = {new Prim()};
 
             for (Algorithm alg : algorithms){
                 alg.loadData(geoRefData.getGeoRefs());

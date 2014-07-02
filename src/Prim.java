@@ -1,5 +1,3 @@
-import com.sun.corba.se.impl.orbutil.graph.Graph;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -19,15 +17,19 @@ public class Prim extends Algorithm {
 
     @Override
     void run() {
+        time = System.nanoTime();
         heap = new FibonacciHeap();
         entryMap = new HashMap<HeapNode, Entry>();
+        HeapNode root = null;
 
         for (int i = 0; i < geoRefs.size(); i++) {
             GeoRef point = geoRefs.get(i);
             HeapNode node;
 
             if (i == 0) {
+                // The root has distance 0 to the root
                 node = new HeapNode(point, null, 0);
+                root = node;
             } else {
                 node = new HeapNode(point, null, Double.POSITIVE_INFINITY);
             }
@@ -36,14 +38,10 @@ public class Prim extends Algorithm {
             entryMap.put(node, entry);
         }
 
-        List<HeapNode> result = new ArrayList<HeapNode>();
-
         while (!heap.isEmpty()) {
             Entry min = heap.dequeueMin();
             HeapNode heapNodeMin = min.getValue();
             entryMap.remove(heapNodeMin);
-            result.add(heapNodeMin);
-            conjunct.add(heapNodeMin.getData());
 
             // Iterate over the nodes in the fib heap
             for (HeapNode node : entryMap.keySet()) {
@@ -57,11 +55,31 @@ public class Prim extends Algorithm {
                 }
             }
         }
-        double totalDistance = 0;
-        for (int i = 0; i < result.size(); i++) {
-            totalDistance+=result.get(i).getDistance();
+
+        buildResult(root);
+
+        time = System.nanoTime() - time;
+
+        roadDistance = 0;
+
+        for (int i = 0; i < conjunct.size()-1; i++) {
+            roadDistance += conjunct.get(i).distance(conjunct.get(i+1));
         }
-        System.out.println("La distancia es: "+ totalDistance);
+
+        roadDistance += conjunct.get(conjunct.size()-1).distance(conjunct.get(0));
+
         int i = 9;
+    }
+
+    /**
+     * Go through all the tree nodes in pre-order
+     * @param root
+     */
+    private void buildResult(HeapNode root) {
+        conjunct.add(root.getData());
+        for (HeapNode heapNode : root.getChildren()) {
+            buildResult(heapNode);
+        }
+
     }
 }

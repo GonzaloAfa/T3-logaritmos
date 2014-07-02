@@ -7,14 +7,14 @@ import java.util.List;
 public class HeapNode {
     private GeoRef data;
     private HeapNode parent;
-    private List<HeapNode> sons;
+    private List<HeapNode> children;
     private double distance;
 
     public HeapNode(GeoRef data, HeapNode parent, double distance) {
         this.data = data;
         this.parent = parent;
         this.distance = distance;
-        this.sons = new ArrayList<HeapNode>();
+        this.children = new ArrayList<HeapNode>();
     }
 
     public GeoRef getData() {
@@ -25,9 +25,17 @@ public class HeapNode {
         return parent;
     }
 
-    public void setParent(HeapNode parent) {
-        this.parent = parent;
+    public void setParent(HeapNode newParent) {
+        if(parent!=null) {
+            parent.removeSon(this);
+        }
+
+        parent = newParent;
         parent.addSon(this);
+    }
+
+    private void removeSon(HeapNode son) {
+        children.remove(son);
     }
 
     public double getDistance() {
@@ -39,17 +47,17 @@ public class HeapNode {
     }
 
     public void addSon(HeapNode sons) {
-        this.sons.add(sons);
+        children.add(sons);
     }
 
-    public List<HeapNode> getSons() {
-        return sons;
+    public List<HeapNode> getChildren() {
+        return children;
     }
 
     @Override
     public String toString() {
         String sonIds = "";
-        for (HeapNode sone : sons) {
+        for (HeapNode sone : children) {
             sonIds += ", " + sone.getData().getId();
         }
         int parentId = parent == null ? -1 : parent.getData().getId();
