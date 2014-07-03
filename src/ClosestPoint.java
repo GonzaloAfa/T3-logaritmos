@@ -1,11 +1,11 @@
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * Created by Gonzaloafa on 24-06-2014.
  */
-public class ClosestPoint extends Algorithm{
+public class ClosestPoint extends Algorithm {
     @Override
     String getNameAlgorithm() {
         return "PuntosCercanos";
@@ -19,52 +19,39 @@ public class ClosestPoint extends Algorithm{
     void run() {
         roadDistance = 0;
 
-        //dictatorialmente tomamos el primer número del arreglo y desde ahí construimos nuestro camino.
-        conjunct.add(geoRefs.remove(0));
+        time = System.nanoTime();
 
-        long timePass = System.nanoTime();
+        //Tomamos un punto al azar del arreglo y desde ahí construimos nuestro camino.
+        GeoRef actual = geoRefs.remove(new Random().nextInt(geoRefs.size()));
+        conjunct.add(actual);
+
+        double minimum;
+        GeoRef newPoint = null;
 
         while (0 < geoRefs.size()) {
 
-            GeoRef minP = null;
-            DistanceToSet minimum = null;
+            minimum = Double.POSITIVE_INFINITY;
 
-            // Buscamos el p \in P que está más cerca de TODOS los puntos del conjunto C
-            for (GeoRef p : geoRefs) {
+            // Buscamos el p que no está C, que está más cerca del nodo actual
+            for (int i = 0; i < geoRefs.size(); i++) {
+                GeoRef p = geoRefs.get(i);
 
-                DistanceToSet distance= getDistanceToSet(p, conjunct);
+                double dist = actual.distance(p);
 
-                if (minimum == null || distance.totalDistance < minimum.totalDistance) {
-                    minimum = distance;
-                    minP = p;
+                if (dist < minimum) {
+                    minimum = dist;
+                    newPoint = p;
                 }
             }
 
-            this.roadDistance += minimum.minDistance;
+            roadDistance += minimum;
 
-            conjunct.add(minimum.minIndex + 1, minP);
-            geoRefs.remove(minP);
-
-        }
-        this.time = System.nanoTime() - timePass;
-    }
-
-    private DistanceToSet getDistanceToSet(GeoRef p, List<GeoRef> c) {
-        double totalDistance = 0,
-                minimum = Double.MAX_VALUE;
-        int minIndex = -1;
-
-        for (int i = 0; i < c.size(); i++) {
-
-            double dist = p.distance(c.get(i));
-            totalDistance += dist;
-
-            if (dist < minimum) {
-                minimum = dist;
-                minIndex = i;
-            }
+            conjunct.add(newPoint);
+            geoRefs.remove(newPoint);
+            actual = newPoint;
         }
 
-        return new DistanceToSet(totalDistance, minimum, minIndex);
+        roadDistance += conjunct.get(0).distance(conjunct.get(conjunct.size()-1));
+        time = System.nanoTime() - time;
     }
 }
